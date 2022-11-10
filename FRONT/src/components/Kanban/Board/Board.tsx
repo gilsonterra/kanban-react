@@ -66,6 +66,14 @@ const Kanban = () => {
     setCards((oldValues) => oldValues.filter((item) => item.id !== card?.id));
   };
 
+  const onSubmit = (card?: Card) => {
+    setCards((oldValues) =>
+      oldValues.map((item) =>
+        item.id === card?.id ? { ...card } : item
+      )
+    );
+  };
+
   return (
     <Container>
       <Column title="Novo">
@@ -78,6 +86,7 @@ const Kanban = () => {
             card={card}
             onClickRight={(card) => onChangeList(ListaEnum.Doing, card)}
             onClickDelete={onDelete}
+            onSubmit={onSubmit}
           />
         ))}
       </Column>
@@ -89,6 +98,7 @@ const Kanban = () => {
             onClickLeft={(card) => onChangeList(ListaEnum.ToDo, card)}
             onClickRight={(card) => onChangeList(ListaEnum.Done, card)}
             onClickDelete={onDelete}
+            onSubmit={onSubmit}
           />
         ))}
       </Column>
@@ -99,6 +109,7 @@ const Kanban = () => {
             card={card}
             onClickLeft={(card) => onChangeList(ListaEnum.Doing, card)}
             onClickDelete={onDelete}
+            onSubmit={onSubmit}
           />
         ))}
       </Column>

@@ -25,15 +25,16 @@ const Description = styled.p`
 `;
 
 interface CardViewProps {
-  card?: Card;
+  title?: string;
+  description?: string;
   children?: JSX.Element | JSX.Element[] | undefined | null;
 }
 
-const CardView = ({ card, children }: CardViewProps) => {
+const CardView = ({ title, description, children }: CardViewProps) => {
   return (
     <Container>
-      <Title>{card?.titulo}</Title>
-      <Description>{card?.conteudo}</Description>
+      <Title>{title}</Title>
+      <Description>{description}</Description>
       <CardAction>{children}</CardAction>
     </Container>
   );

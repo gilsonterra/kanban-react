@@ -9,9 +9,15 @@ import {
   BsChevronRight,
   BsTrashFill,
   BsPencilFill,
+  BsArrowCounterclockwise,
+  BsFillCheckCircleFill,
+  BsPlusCircleFill,
+  BsCheckCircleFill,
 } from "react-icons/bs";
 import Button from "../../Form/Button/Button";
 import { Card } from "../../../types/Card";
+import Loading from "../../Form/Loading/Loading";
+import CardFormEdit from "../CardFormEdit/CardFormEdit";
 
 const Container = styled.div`
   position: relative;
@@ -29,16 +35,11 @@ const ButtonEdit = styled(ButtonCircle)`
   top: 10px;
 `;
 
-interface Data {
-  title?: string;
-  description?: string;
-}
-
-interface CardProps extends Data {
+interface CardProps {
   mode?: ModeEnum;
   loading?: boolean;
   card?: Card;
-  onSubmit?: (card?: Card | null) => void;
+  onSubmit?: (card?: Card) => void;
   onClickLeft?: (card?: Card) => void;
   onClickRight?: (card?: Card) => void;
   onClickDelete?: (card?: Card) => void;
@@ -47,24 +48,30 @@ interface CardProps extends Data {
 const CardComponent = ({
   mode = ModeEnum.VIEW,
   loading = false,
-  card,
+  card = { titulo: "", conteudo: "" },
   onSubmit,
   onClickLeft,
   onClickRight,
   onClickDelete,
 }: CardProps) => {
   const [cardMode, setCardMode] = useState(mode);
-  const onEdit = () =>
-    setCardMode(cardMode === ModeEnum.VIEW ? ModeEnum.EDIT : ModeEnum.VIEW);
+
+  const handleSubmit = (card?: Card) => {
+    if (!card?.titulo || !card.conteudo) {
+      alert("Campos obrigatórios");
+    } else {
+      onSubmit && onSubmit(card);
+    }
+  };
 
   return (
     <Container>
       {cardMode === ModeEnum.VIEW ? (
         <>
-          <ButtonEdit onClick={onEdit}>
+          <ButtonEdit onClick={() => setCardMode(ModeEnum.EDIT)}>
             <BsPencilFill />
           </ButtonEdit>
-          <CardView card={card}>
+          <CardView title={card?.titulo} description={card?.conteudo}>
             <ButtonCircle
               onClick={() => onClickLeft && onClickLeft(card)}
               disabled={card?.lista === ListaEnum.ToDo}
@@ -83,13 +90,17 @@ const CardComponent = ({
           </CardView>
         </>
       ) : (
-        <CardForm
-          mode={cardMode}
-          card={card}
-          onSubmit={onSubmit}
-          onReset={onEdit}
-          loading={loading}
-        />
+        <CardForm card={card} onSubmit={handleSubmit}>
+          {loading ? (
+            <Button disabled>
+              <Loading /> Carregando...
+            </Button>
+          ) : (
+            <Button type="submit">
+              <BsPlusCircleFill /> Adicionar
+            </Button>
+          )}
+        </CardForm>
       )}
     </Container>
   );

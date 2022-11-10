@@ -1,81 +1,61 @@
-import { FormEvent, useState } from "react";
-import {
-  BsPlusCircleFill,
-  BsCheckCircleFill,
-  BsArrowCounterclockwise,
-} from "react-icons/bs";
-import { Card, ModeEnum } from "../../../types/Card";
-import CardAction from "../CardAction/CardAction";
-import Button from "../../Form/Button/Button";
-import Loading from "../../Form/Loading/Loading";
+import { FormEvent, useEffect, useState } from "react";
+import { Card } from "../../../types/Card";
 import Input from "../../Form/Input/Input";
 import TextArea from "../../Form/TextArea/TextArea";
+import CardAction from "../CardAction/CardAction";
 
 interface CardFormProps {
-  onSubmit?: (card?: Card | null) => void;
+  children?: JSX.Element | JSX.Element[];
+  disabled?: boolean;
+  card?: Card;
+  onSubmit?: (card?: Card) => void;
   onReset?: () => void;
-  loading?: boolean;
-  mode: ModeEnum.NEW | ModeEnum.EDIT;
-  card?: Card | null;
 }
 
 const CardForm = ({
+  disabled = false,  
+  card = { titulo: "", conteudo: "" },
+  children,
   onSubmit,
   onReset,
-  mode,
-  loading = false,
-  card,
 }: CardFormProps) => {
-  const [data, setData] = useState<Card | null | undefined>(card);
+  const [cardData, setCardData] = useState(card);
 
-  const handleChange = (name: string, value: string) =>
-    setData((oldValues) => ({ ...oldValues, [name]: value }));
+  const handleChange = (name: keyof Card, value: string) => {
+    setCardData((oldValues) => ({ ...oldValues, [name]: value }));
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    onSubmit && onSubmit(data);
+    console.log('HandleSubmit', cardData)
+    onSubmit && onSubmit({...cardData});
   };
 
   const handleReset = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setData(data);
     onReset && onReset();
   };
+
+  useEffect(() => {
+    setCardData(card);
+  }, [card]);
 
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
       <Input
-        disabled={loading}
-        value={data?.titulo}
+        disabled={disabled}
+        value={cardData.titulo}
         onChange={(e) => handleChange("titulo", e.target.value)}
         placeholder="Título"
+        maxLength={40}
       />
       <TextArea
-        disabled={loading}
-        value={data?.conteudo}
+        disabled={disabled}
+        value={cardData.conteudo}
         onChange={(e) => handleChange("conteudo", e.target.value)}
         placeholder="Descrição"
       />
-      <CardAction>
-        {loading ? (
-          <Button disabled>
-            <Loading /> Carregando...
-          </Button>
-        ) : mode === ModeEnum.NEW ? (
-          <Button type="submit">
-            <BsPlusCircleFill /> Adicionar
-          </Button>
-        ) : (
-          <>
-            <Button type="reset">
-              <BsArrowCounterclockwise /> Cancelar
-            </Button>
-            <Button type="submit">
-              <BsCheckCircleFill /> Salvar
-            </Button>
-          </>
-        )}
-      </CardAction>
+      <CardAction>{children}</CardAction>
     </form>
   );
 };
