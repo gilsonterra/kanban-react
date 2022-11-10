@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Column from "../Column/Column";
 import CardComponent from "../Card/Card";
-import { ListaEnum, ModeEnum, Card } from "../../types/Card";
+import { ListaEnum, ModeEnum, Card } from "../../../types/Card";
 import { v4 } from "uuid";
 
 const Container = styled.div`

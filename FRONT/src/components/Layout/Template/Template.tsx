@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "../Header/Header";
-import Board from "../Board/Board";
+import Board from "../../Kanban/Board/Board";
 
 const Main = styled.div`
   position: relative;

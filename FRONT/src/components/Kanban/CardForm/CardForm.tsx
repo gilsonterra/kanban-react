@@ -1,42 +1,15 @@
 import { FormEvent, useState } from "react";
-import styled from "styled-components";
 import {
   BsPlusCircleFill,
   BsCheckCircleFill,
   BsArrowCounterclockwise,
 } from "react-icons/bs";
-import { Card, ModeEnum } from "../../types/Card";
+import { Card, ModeEnum } from "../../../types/Card";
 import CardAction from "../CardAction/CardAction";
-import Button from "../Button/Button";
-import Loading from "../Loading/Loading";
-
-const InputTitle = styled.input`
-  height: 40px;
-  width: 100%;
-  border: solid 1px #4e5561;
-  margin-bottom: 2px;
-  font-size: 1rem;
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-`;
-
-const TextAreaDescription = styled.textarea`
-  height: 90px;
-  width: 100%;
-  border: solid 1px #4e5561;
-  margin-bottom: 2px;
-  font-size: 1rem;
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-`;
+import Button from "../../Form/Button/Button";
+import Loading from "../../Form/Loading/Loading";
+import Input from "../../Form/Input/Input";
+import TextArea from "../../Form/TextArea/TextArea";
 
 interface CardFormProps {
   onSubmit?: (card?: Card | null) => void;
@@ -53,7 +26,7 @@ const CardForm = ({
   loading = false,
   card,
 }: CardFormProps) => {
-  const [data, setData] = useState<Card | null| undefined>(card);
+  const [data, setData] = useState<Card | null | undefined>(card);
 
   const handleChange = (name: string, value: string) =>
     setData((oldValues) => ({ ...oldValues, [name]: value }));
@@ -71,13 +44,13 @@ const CardForm = ({
 
   return (
     <form onSubmit={handleSubmit} onReset={handleReset}>
-      <InputTitle
+      <Input
         disabled={loading}
         value={data?.titulo}
         onChange={(e) => handleChange("titulo", e.target.value)}
         placeholder="Título"
       />
-      <TextAreaDescription
+      <TextArea
         disabled={loading}
         value={data?.conteudo}
         onChange={(e) => handleChange("conteudo", e.target.value)}

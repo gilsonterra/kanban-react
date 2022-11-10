@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { ListaEnum, ModeEnum } from "../../types/Card";
-import { ButtonCircle } from "../Button/Button";
+import { ListaEnum, ModeEnum } from "../../../types/Card";
+import { ButtonCircle } from "../../Form/Button/Button";
 import CardForm from "../CardForm/CardForm";
 import CardView from "../CardView/CardView";
 import {
@@ -10,8 +10,8 @@ import {
   BsTrashFill,
   BsPencilFill,
 } from "react-icons/bs";
-import Button from "../Button/Button";
-import { Card } from "../../types/Card";
+import Button from "../../Form/Button/Button";
+import { Card } from "../../../types/Card";
 
 const Container = styled.div`
   position: relative;
