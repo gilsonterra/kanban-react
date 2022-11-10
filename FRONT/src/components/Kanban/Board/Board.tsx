@@ -47,11 +47,17 @@ const Kanban = () => {
 
   console.log("renderizou Board");
 
-  const onAdd = (card?: Card | null) => {
+  const onNew = (card?: Card | null) => {
     setCards((oldValues) => [
       ...oldValues,
       { ...card, id: v4(), lista: ListaEnum.ToDo },
     ]);
+  };
+
+  const onEdit = (card?: Card) => {
+    setCards((oldValues) =>
+      oldValues.map((item) => (item.id === card?.id ? { ...card } : item))
+    );
   };
 
   const onChangeList = (lista: ListaEnum, card?: Card) => {
@@ -66,27 +72,19 @@ const Kanban = () => {
     setCards((oldValues) => oldValues.filter((item) => item.id !== card?.id));
   };
 
-  const onSubmit = (card?: Card) => {
-    setCards((oldValues) =>
-      oldValues.map((item) =>
-        item.id === card?.id ? { ...card } : item
-      )
-    );
-  };
-
   return (
     <Container>
       <Column title="Novo">
-        <CardComponent mode={ModeEnum.NEW} onSubmit={onAdd} />
+        <CardComponent mode={ModeEnum.NEW} onNew={onNew} />
       </Column>
       <Column title="To Do" total={cardsTodo.length}>
         {cardsTodo.map((card) => (
           <CardComponent
             key={card.id}
             card={card}
-            onClickRight={(card) => onChangeList(ListaEnum.Doing, card)}
-            onClickDelete={onDelete}
-            onSubmit={onSubmit}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onRight={(card) => onChangeList(ListaEnum.Doing, card)}
           />
         ))}
       </Column>
@@ -95,10 +93,10 @@ const Kanban = () => {
           <CardComponent
             key={card.id}
             card={card}
-            onClickLeft={(card) => onChangeList(ListaEnum.ToDo, card)}
-            onClickRight={(card) => onChangeList(ListaEnum.Done, card)}
-            onClickDelete={onDelete}
-            onSubmit={onSubmit}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onLeft={(card) => onChangeList(ListaEnum.ToDo, card)}
+            onRight={(card) => onChangeList(ListaEnum.Done, card)}
           />
         ))}
       </Column>
@@ -107,9 +105,9 @@ const Kanban = () => {
           <CardComponent
             key={card.id}
             card={card}
-            onClickLeft={(card) => onChangeList(ListaEnum.Doing, card)}
-            onClickDelete={onDelete}
-            onSubmit={onSubmit}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onLeft={(card) => onChangeList(ListaEnum.Doing, card)}
           />
         ))}
       </Column>

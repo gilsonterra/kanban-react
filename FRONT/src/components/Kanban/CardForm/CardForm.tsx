@@ -27,7 +27,6 @@ const CardForm = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log('HandleSubmit', cardData)
     onSubmit && onSubmit({...cardData});
   };
 

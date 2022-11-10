@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Card } from "../../../types/Card";
 import CardAction from "../CardAction/CardAction";
 
 const Container = styled.div`
