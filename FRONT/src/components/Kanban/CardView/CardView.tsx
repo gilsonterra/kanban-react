@@ -1,5 +1,10 @@
+import { BsChevronLeft, BsChevronRight, BsTrashFill } from "react-icons/bs";
 import styled from "styled-components";
+import { Card, ModeEnum } from "../../../types/Card";
+import Button, { ButtonCircle } from "../../Form/Button/Button";
 import CardAction from "../CardAction/CardAction";
+
+const DEFAULT_CARD_VALUE = { titulo: "", conteudo: "" };
 
 const Container = styled.div`
   display: flex;
@@ -24,17 +29,37 @@ const Description = styled.p`
 `;
 
 interface CardViewProps {
-  title?: string;
-  description?: string;
-  children?: JSX.Element | JSX.Element[] | undefined | null;
+  card?: Card;
+  mode?: ModeEnum;
+  onDelete?: (card?: Card) => void;
+  onLeft?: (card?: Card) => void;
+  onRight?: (card?: Card) => void;
 }
 
-const CardView = ({ title, description, children }: CardViewProps) => {
+const CardView = ({
+  card = DEFAULT_CARD_VALUE,
+  onDelete,
+  onLeft,
+  onRight,
+}: CardViewProps) => {
   return (
     <Container>
-      <Title>{title}</Title>
-      <Description>{description}</Description>
-      <CardAction>{children}</CardAction>
+      <Title>{card?.titulo}</Title>
+      <Description>{card?.conteudo}</Description>
+      <CardAction>
+        <ButtonCircle onClick={() => onLeft && onLeft(card)} disabled={!onLeft}>
+          <BsChevronLeft />
+        </ButtonCircle>
+        <Button onClick={() => onDelete && onDelete(card)} disabled={!onDelete}>
+          <BsTrashFill />
+        </Button>
+        <ButtonCircle
+          onClick={() => onRight && onRight(card)}
+          disabled={!onRight}
+        >
+          <BsChevronRight />
+        </ButtonCircle>
+      </CardAction>
     </Container>
   );
 };

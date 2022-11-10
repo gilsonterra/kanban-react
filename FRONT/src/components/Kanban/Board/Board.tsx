@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Column from "../Column/Column";
 import CardComponent from "../Card/Card";
 import { ListaEnum, ModeEnum, Card } from "../../../types/Card";
-import { v4 } from "uuid";
 
 const Container = styled.div`
   display: flex;
@@ -16,25 +15,25 @@ const Container = styled.div`
 const Kanban = () => {
   const [cards, setCards] = useState<Card[]>([
     {
-      id: v4() + 1,
+      id: "1",
       titulo: "Primeiro",
       conteudo: " alksdjflkasjdfl kksadjf lksadj",
       lista: ListaEnum.ToDo,
     },
     {
-      id: v4() + 2,
+      id: "2",
       titulo: "Segundo",
       conteudo: " alksdjflkasjdfl kksadjf lksadj",
       lista: ListaEnum.ToDo,
     },
     {
-      id: v4() + 3,
+      id: "3",
       titulo: "Teste",
       conteudo: " alksdjflkasjdfl kksadjf lksadj",
       lista: ListaEnum.Doing,
     },
     {
-      id: v4() + 4,
+      id: "4",
       titulo: "Teste",
       conteudo: " alksdjflkasjdfl kksadjf lksadj",
       lista: ListaEnum.Done,
@@ -45,13 +44,8 @@ const Kanban = () => {
   const cardsDoing = cards.filter((item) => item.lista === ListaEnum.Doing);
   const cardsDone = cards.filter((item) => item.lista === ListaEnum.Done);
 
-  console.log("renderizou Board");
-
   const onNew = (card?: Card | null) => {
-    setCards((oldValues) => [
-      ...oldValues,
-      { ...card, id: v4(), lista: ListaEnum.ToDo },
-    ]);
+    setCards((oldValues) => [...oldValues, { ...card, lista: ListaEnum.ToDo }]);
   };
 
   const onEdit = (card?: Card) => {
