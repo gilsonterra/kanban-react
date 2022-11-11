@@ -1,15 +1,26 @@
-# Executar projeto
+# Kanban
 
-## Backend
+Projeto desenvolvido com as seguintes tecnologias:
+
+- React (Interface)
+- TypeScript (Tipagem de dados)
+- Jest (Teste unitário)
+- Fetch (Integração com Api)
+- Marked + DomPurify (Para renderização de markdown)
+
+## Executar projeto
+
+### Backend
 
 ```shell
 cd BACK
 npm install
 npm run server
 ```
-URL: http://localhost:5000
 
-## Frontend
+URL: <http://localhost:5000>
+
+### Frontend
 
 ```shell
 cd FRONT
@@ -17,16 +28,15 @@ npm install
 npm run start
 ```
 
-URL: http://localhost:3000
+URL: <http://localhost:3000>
 
-## Test Unitário
+### Test Unitário
 
 ```shell
 cd FRONT
 npm run test
 ```
 
-# Video Demo
+## Video Demo
 
-https://user-images.githubusercontent.com/2127096/201266156-a9c907b2-d7fe-4aee-b701-135f37068617.mp4
-
+<https://user-images.githubusercontent.com/2127096/201266156-a9c907b2-d7fe-4aee-b701-135f37068617.mp4>
