@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Column from "../Column/Column";
 import CardComponent from "../Card/Card";
 import { ListaEnum, ModeEnum, Card } from "../../../types/Card";
+import { getAll, post, put, remove } from "../../../services/cardService";
+import { authentication } from "../../../services/loginService";
 
 const Container = styled.div`
   display: flex;
@@ -13,58 +15,61 @@ const Container = styled.div`
 `;
 
 const Kanban = () => {
-  const [cards, setCards] = useState<Card[]>([
-    {
-      id: "1",
-      titulo: "Primeiro",
-      conteudo: " alksdjflkasjdfl kksadjf lksadj",
-      lista: ListaEnum.ToDo,
-    },
-    {
-      id: "2",
-      titulo: "Segundo",
-      conteudo: " alksdjflkasjdfl kksadjf lksadj",
-      lista: ListaEnum.ToDo,
-    },
-    {
-      id: "3",
-      titulo: "Teste",
-      conteudo: " alksdjflkasjdfl kksadjf lksadj",
-      lista: ListaEnum.Doing,
-    },
-    {
-      id: "4",
-      titulo: "Teste",
-      conteudo: " alksdjflkasjdfl kksadjf lksadj",
-      lista: ListaEnum.Done,
-    },
-  ]);
-
+  const [cards, setCards] = useState<Card[]>([]);
   const cardsTodo = cards.filter((item) => item.lista === ListaEnum.ToDo);
   const cardsDoing = cards.filter((item) => item.lista === ListaEnum.Doing);
   const cardsDone = cards.filter((item) => item.lista === ListaEnum.Done);
 
-  const onNew = (card?: Card | null) => {
-    setCards((oldValues) => [...oldValues, { ...card, lista: ListaEnum.ToDo }]);
+  const onNew = async (card?: Card | null) => {
+    try {
+      await post({ ...card });
+      fetchCards();
+    } catch (e) {
+      alert(`Erro ao cadastrar um card! ${e}`);
+      console.error(e);
+    }
   };
 
-  const onEdit = (card?: Card) => {
-    setCards((oldValues) =>
-      oldValues.map((item) => (item.id === card?.id ? { ...card } : item))
-    );
+  const onEdit = async (card?: Card) => {
+    try {
+      if(!card?.id){
+        throw new Error(`Para editar o card o Id é obrigatório!`);
+      }
+
+      await put(card?.id, { ...card });
+      fetchCards();
+    } catch (e) {
+      alert(`Erro ao editar um card! ${e}`);
+      console.error(e);
+    }
   };
 
   const onChangeList = (lista: ListaEnum, card?: Card) => {
-    setCards((oldValues) =>
-      oldValues.map((item) =>
-        item.id === card?.id ? { ...item, lista } : item
-      )
-    );
+    onEdit({...card, lista });
   };
 
-  const onDelete = (card?: Card) => {
-    setCards((oldValues) => oldValues.filter((item) => item.id !== card?.id));
+  const onDelete = async (card?: Card) => {
+    try {
+      if(!card?.id){
+        throw new Error(`Para remover o card o Id é obrigatório!`);
+      }
+
+      await remove(card.id);
+      fetchCards();
+    } catch (e) {
+      alert(`Erro ao deletar o card: ${card?.id}! ${e}`);
+      console.error(e);
+    }    
   };
+
+  const fetchCards = useCallback(async () => {
+    const cards = await getAll();
+    setCards(cards);
+  }, []);
+
+  useEffect(() => {
+    authentication().then(() => fetchCards());
+  }, [fetchCards]);
 
   return (
     <Container>

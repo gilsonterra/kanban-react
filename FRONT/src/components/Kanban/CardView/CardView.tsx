@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Card, ModeEnum } from "../../../types/Card";
 import Button, { ButtonCircle } from "../../Form/Button/Button";
 import CardAction from "../CardAction/CardAction";
+import { marked } from 'marked';
 
 const DEFAULT_CARD_VALUE = { titulo: "", conteudo: "" };
 
@@ -20,7 +21,7 @@ const Title = styled.label`
   padding: 5px;
 `;
 
-const Description = styled.p`
+const Description = styled.div`
   color: #4e5561;
   font-size: 1rem;
   word-wrap: break-word;
@@ -42,10 +43,13 @@ const CardView = ({
   onLeft,
   onRight,
 }: CardViewProps) => {
+
+  const descriptionMarkdown = marked.parse(card?.conteudo || '');
+
   return (
     <Container>
       <Title>{card?.titulo}</Title>
-      <Description>{card?.conteudo}</Description>
+      <Description dangerouslySetInnerHTML={{__html: descriptionMarkdown}}></Description>
       <CardAction>
         <ButtonCircle onClick={() => onLeft && onLeft(card)} disabled={!onLeft}>
           <BsChevronLeft />

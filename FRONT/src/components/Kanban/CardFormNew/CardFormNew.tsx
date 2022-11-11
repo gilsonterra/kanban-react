@@ -1,13 +1,28 @@
 import { FormEvent, useState } from "react";
 import { BsPlusCircleFill } from "react-icons/bs";
-import { Card } from "../../../types/Card";
+import { Card, ListaEnum } from "../../../types/Card";
 import Button from "../../Form/Button/Button";
 import Input from "../../Form/Input/Input";
 import TextArea from "../../Form/TextArea/TextArea";
 import CardAction from "../CardAction/CardAction";
 import { v4 } from "uuid";
+import styled from "styled-components";
 
 const DEFAULT_CARD_VALUE = { titulo: "", conteudo: "" };
+
+const Hint = styled.span`
+  font-size: 0.8rem;
+  color: #b3aeae;
+  padding: 5px 0;
+`;
+
+const ContainerTextArea = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface CardFormNewProps {
   card?: Card;
@@ -26,7 +41,7 @@ const CardFormNew = ({
 
   const handleAddNewCard = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit && onSubmit({...localCard, id: v4() });
+    onSubmit && onSubmit({ ...localCard, lista: ListaEnum.ToDo  });
     setLocalCard(DEFAULT_CARD_VALUE);
   };
 
@@ -38,11 +53,14 @@ const CardFormNew = ({
         placeholder="Título"
         maxLength={40}
       />
-      <TextArea
-        value={localCard.conteudo}
-        onChange={(e) => handleLocalCardChange("conteudo", e.target.value)}
-        placeholder="Descrição"
-      />
+      <ContainerTextArea>
+        <TextArea
+          value={localCard.conteudo}
+          onChange={(e) => handleLocalCardChange("conteudo", e.target.value)}
+          placeholder="Descrição"
+        />
+        <Hint>Use markdown para formatar seu texto!</Hint>
+      </ContainerTextArea>
       <CardAction>
         <Button type="submit" disabled={!isValidForm}>
           <BsPlusCircleFill /> Adicionar
