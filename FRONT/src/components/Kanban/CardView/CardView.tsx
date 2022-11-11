@@ -3,13 +3,23 @@ import styled from "styled-components";
 import { Card, ModeEnum } from "../../../types/Card";
 import Button, { ButtonCircle } from "../../Form/Button/Button";
 import CardAction from "../CardAction/CardAction";
-import { marked } from 'marked';
+import { marked } from "marked";
+import Loading from "../../Form/Loading/Loading";
 
 const DEFAULT_CARD_VALUE = { titulo: "", conteudo: "" };
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const ContainerLoading = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Title = styled.label`
@@ -32,6 +42,7 @@ const Description = styled.div`
 interface CardViewProps {
   card?: Card;
   mode?: ModeEnum;
+  loading?: boolean;
   onDelete?: (card?: Card) => void;
   onLeft?: (card?: Card) => void;
   onRight?: (card?: Card) => void;
@@ -39,30 +50,44 @@ interface CardViewProps {
 
 const CardView = ({
   card = DEFAULT_CARD_VALUE,
+  loading = false,
   onDelete,
   onLeft,
   onRight,
 }: CardViewProps) => {
-
-  const descriptionMarkdown = marked.parse(card?.conteudo || '');
+  const descriptionMarkdown = marked.parse(card?.conteudo || "");
 
   return (
     <Container>
       <Title>{card?.titulo}</Title>
-      <Description dangerouslySetInnerHTML={{__html: descriptionMarkdown}}></Description>
+      <Description dangerouslySetInnerHTML={{ __html: descriptionMarkdown }} />
       <CardAction>
-        <ButtonCircle onClick={() => onLeft && onLeft(card)} disabled={!onLeft}>
-          <BsChevronLeft />
-        </ButtonCircle>
-        <Button onClick={() => onDelete && onDelete(card)} disabled={!onDelete}>
-          <BsTrashFill />
-        </Button>
-        <ButtonCircle
-          onClick={() => onRight && onRight(card)}
-          disabled={!onRight}
-        >
-          <BsChevronRight />
-        </ButtonCircle>
+        {loading ? (
+          <ContainerLoading>
+            <Loading /> Carregando...
+          </ContainerLoading>
+        ) : (
+          <>
+            <ButtonCircle
+              onClick={() => onLeft && onLeft(card)}
+              disabled={!onLeft}
+            >
+              <BsChevronLeft />
+            </ButtonCircle>
+            <Button
+              onClick={() => onDelete && onDelete(card)}
+              disabled={!onDelete}
+            >
+              <BsTrashFill />
+            </Button>
+            <ButtonCircle
+              onClick={() => onRight && onRight(card)}
+              disabled={!onRight}
+            >
+              <BsChevronRight />
+            </ButtonCircle>
+          </>
+        )}
       </CardAction>
     </Container>
   );

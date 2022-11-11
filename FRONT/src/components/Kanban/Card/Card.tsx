@@ -28,6 +28,7 @@ const DEFAULT_CARD_VALUE = { titulo: "", conteudo: "" };
 interface CardProps {
   card?: CardData;
   mode?: ModeEnum;
+  loading?: boolean;
   onNew?: (card?: CardData) => void;
   onEdit?: (card?: CardData) => void;
   onDelete?: (card?: CardData) => void;
@@ -38,6 +39,7 @@ interface CardProps {
 const Card = ({
   mode = ModeEnum.VIEW,
   card = DEFAULT_CARD_VALUE,
+  loading = false,
   onNew,
   onEdit,
   onDelete,
@@ -57,16 +59,18 @@ const Card = ({
           </ButtonEdit>
           <CardView
             card={card}
+            loading={loading}
             onDelete={onDelete}
             onLeft={onLeft}
             onRight={onRight}
           />
         </>
       ) : isModeNew ? (
-        <CardFormNew card={card} onSubmit={onNew} />
+        <CardFormNew card={card} onSubmit={onNew} loading={loading} />
       ) : (
         <CardFormEdit
           card={card}
+          loading={loading}
           onSubmit={(card) => {
             onEdit && onEdit(card);
             setLocalMode(ModeEnum.VIEW);

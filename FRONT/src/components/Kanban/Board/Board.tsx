@@ -16,50 +16,70 @@ const Container = styled.div`
 
 const Kanban = () => {
   const [cards, setCards] = useState<Card[]>([]);
+  const [loadingNew, setLoadingNew] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState<string[]>([]);
+
+  const isCardLoading = (id?: string): boolean =>
+    !!loadingEdit.find((item) => item === id);
+
   const cardsTodo = cards.filter((item) => item.lista === ListaEnum.ToDo);
   const cardsDoing = cards.filter((item) => item.lista === ListaEnum.Doing);
   const cardsDone = cards.filter((item) => item.lista === ListaEnum.Done);
 
   const onNew = async (card?: Card | null) => {
     try {
+      setLoadingNew(true);
+
       await post({ ...card });
-      fetchCards();
+      await fetchCards();
     } catch (e) {
       alert(`Erro ao cadastrar um card! ${e}`);
       console.error(e);
+    } finally {
+      setLoadingNew(false);
     }
   };
 
   const onEdit = async (card?: Card) => {
+    const id = card?.id;
+
     try {
-      if(!card?.id){
+      if (!id) {
         throw new Error(`Para editar o card o Id é obrigatório!`);
       }
 
-      await put(card?.id, { ...card });
-      fetchCards();
+      setLoadingEdit((oldValues) => [...oldValues, id]);
+
+      await put(id, { ...card });
+      await fetchCards();
     } catch (e) {
       alert(`Erro ao editar um card! ${e}`);
       console.error(e);
+    } finally {
+      setLoadingEdit((oldValues) => oldValues.filter((i) => i !== id));
     }
   };
 
   const onChangeList = (lista: ListaEnum, card?: Card) => {
-    onEdit({...card, lista });
+    onEdit({ ...card, lista });
   };
 
   const onDelete = async (card?: Card) => {
+    const id = card?.id;
     try {
-      if(!card?.id){
+      if (!id) {
         throw new Error(`Para remover o card o Id é obrigatório!`);
       }
 
-      await remove(card.id);
-      fetchCards();
+      setLoadingEdit((oldValues) => [...oldValues, id]);
+      await remove(id);
+      await fetchCards();
     } catch (e) {
-      alert(`Erro ao deletar o card: ${card?.id}! ${e}`);
+      alert(`Erro ao deletar o card: ${id}! ${e}`);
       console.error(e);
-    }    
+    } finally {
+      setLoadingEdit((oldValues) => oldValues.filter((i) => i !== id));
+    }
   };
 
   const fetchCards = useCallback(async () => {
@@ -74,13 +94,14 @@ const Kanban = () => {
   return (
     <Container>
       <Column title="Novo">
-        <CardComponent mode={ModeEnum.NEW} onNew={onNew} />
+        <CardComponent mode={ModeEnum.NEW} onNew={onNew} loading={loadingNew} />
       </Column>
       <Column title="To Do" total={cardsTodo.length}>
         {cardsTodo.map((card) => (
           <CardComponent
             key={card.id}
             card={card}
+            loading={isCardLoading(card?.id)}
             onDelete={onDelete}
             onEdit={onEdit}
             onRight={(card) => onChangeList(ListaEnum.Doing, card)}
@@ -92,6 +113,7 @@ const Kanban = () => {
           <CardComponent
             key={card.id}
             card={card}
+            loading={isCardLoading(card?.id)}
             onDelete={onDelete}
             onEdit={onEdit}
             onLeft={(card) => onChangeList(ListaEnum.ToDo, card)}
@@ -104,6 +126,7 @@ const Kanban = () => {
           <CardComponent
             key={card.id}
             card={card}
+            loading={isCardLoading(card?.id)}
             onDelete={onDelete}
             onEdit={onEdit}
             onLeft={(card) => onChangeList(ListaEnum.Doing, card)}
