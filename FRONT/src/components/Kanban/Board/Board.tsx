@@ -3,8 +3,8 @@ import styled from "styled-components";
 import Column from "../Column/Column";
 import CardComponent from "../Card/Card";
 import { ListaEnum, ModeEnum, Card } from "../../../types/Card";
-import { getAll, post, put, remove } from "../../../services/cardService";
 import { authentication } from "../../../services/loginService";
+import { getAll, post, put, remove } from "../../../services/cardService";
 
 const Container = styled.div`
   display: flex;
@@ -87,9 +87,14 @@ const Kanban = () => {
     setCards(cards);
   }, []);
 
-  useEffect(() => {
-    authentication().then(() => fetchCards());
+  const initAuthentication = useCallback(async () => {
+    await authentication();
+    await fetchCards();
   }, [fetchCards]);
+
+  useEffect(() => {
+    initAuthentication();
+  }, [initAuthentication]);
 
   return (
     <Container>
