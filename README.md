@@ -14,7 +14,7 @@ URL: http://localhost:5000
 ```shell
 cd FRONT
 npm install
-npm run server
+npm run *start*
 ```
 
 URL: http://localhost:3000
