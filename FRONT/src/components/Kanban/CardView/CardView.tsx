@@ -1,5 +1,5 @@
 import { BsChevronLeft, BsChevronRight, BsTrashFill } from "react-icons/bs";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Card, ModeEnum } from "../../../types/Card";
 import Button, { ButtonCircle } from "../../Form/Button/Button";
 import CardAction from "../CardAction/CardAction";
@@ -7,6 +7,17 @@ import { marked } from "marked";
 import Loading from "../../Form/Loading/Loading";
 
 const DEFAULT_CARD_VALUE = { titulo: "", conteudo: "" };
+
+const textAnimation = keyframes`
+  from {
+    opacity: .6;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +40,7 @@ const Title = styled.label`
   word-wrap: break-word;
   line-height: 1.5rem;
   padding: 5px;
+  animation: ${textAnimation} linear 300ms;
 `;
 
 const Description = styled.div`
@@ -37,6 +49,7 @@ const Description = styled.div`
   word-wrap: break-word;
   line-height: 1.5rem;
   padding: 5px;
+  animation: ${textAnimation} linear 200ms;
 `;
 
 interface CardViewProps {
@@ -69,18 +82,21 @@ const CardView = ({
         ) : (
           <>
             <ButtonCircle
+              title="Voltar Card"
               onClick={() => onLeft && onLeft(card)}
               disabled={!onLeft}
             >
               <BsChevronLeft />
             </ButtonCircle>
             <Button
+              title="Excluir Card"
               onClick={() => onDelete && onDelete(card)}
               disabled={!onDelete}
             >
               <BsTrashFill />
             </Button>
             <ButtonCircle
+              title="Avançar Card"
               onClick={() => onRight && onRight(card)}
               disabled={!onRight}
             >

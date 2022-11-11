@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { BsPencilFill } from "react-icons/bs";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Card as CardData, ModeEnum } from "../../../types/Card";
 import { ButtonCircle } from "../../Form/Button/Button";
 import CardFormNew from "../CardFormNew/CardFormNew";
 import CardFormEdit from "../CardFormEdit/CardFormEdit";
 import CardView from "../CardView/CardView";
+
+const containerAnimation = keyframes`
+  from {
+    background: #b1dd113b;
+  }
+`;
 
 const Container = styled.div`
   position: relative;
@@ -15,6 +21,7 @@ const Container = styled.div`
   box-shadow: 4px 9px 14px 0px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  animation: ${containerAnimation} ease 1s;
 `;
 
 const ButtonEdit = styled(ButtonCircle)`
@@ -54,7 +61,7 @@ const Card = ({
     <Container>
       {isModeView ? (
         <>
-          <ButtonEdit onClick={() => setLocalMode(ModeEnum.EDIT)}>
+          <ButtonEdit title="Editar" onClick={() => setLocalMode(ModeEnum.EDIT)}>
             <BsPencilFill />
           </ButtonEdit>
           <CardView
